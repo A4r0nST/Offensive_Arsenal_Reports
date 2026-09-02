@@ -1,0 +1,396 @@
+{
+  "schema_version": "1.0",
+  "machine": {
+    "name": "Reactor",
+    "slug": "reactor",
+    "platform": "HTB",
+    "operating_system": "Linux",
+    "difficulty": "Easy",
+    "date_started": "2026-08-27",
+    "date_finished": "2026-08-28",
+    "author": "tejas3008"
+  },
+  "description": "In this report, we analyze the compromise of Reactor, starting with the identification of Next.js 15.0.3 on port 3000. Exploitation of CVE-2025-55182 (React Server Components RCE) provided initial access as the node user. Local enumeration revealed an SQLite database containing password hashes, which were cracked offline to gain SSH access as the engineer user. Finally, privilege escalation was achieved by abusing an unauthenticated Node.js Inspector interface running as root on port 9229 to execute arbitrary commands.",
+  "network": {
+    "hosts": [
+      {
+        "ip": "10.129.97.238",
+        "domains": []
+      },
+      {
+        "ip": "10.129.245.214",
+        "domains": []
+      },
+      {
+        "ip": "10.129.70.151",
+        "domains": []
+      }
+    ],
+    "ports": [
+      {
+        "port": 22,
+        "transport_protocol": "TCP",
+        "protocols": [
+          "SSH"
+        ],
+        "service": "ssh",
+        "technology": "OpenSSH",
+        "version": "9.6p1",
+        "exposure": "external",
+        "discovered_phase": "reconnaissance"
+      },
+      {
+        "port": 3000,
+        "transport_protocol": "TCP",
+        "protocols": [
+          "HTTP"
+        ],
+        "service": "http",
+        "technology": "nginx",
+        "version": "1.24.0",
+        "exposure": "external",
+        "discovered_phase": "reconnaissance"
+      },
+      {
+        "port": 9229,
+        "transport_protocol": "TCP",
+        "protocols": [
+          "HTTP",
+          "WEBSOCKET"
+        ],
+        "service": "node-inspector",
+        "technology": "Node.js Inspector",
+        "version": null,
+        "exposure": "local_internal",
+        "discovered_phase": "privilege_escalation"
+      }
+    ]
+  },
+  "technologies": [
+    {
+      "name": "OpenSSH",
+      "version": "9.6p1",
+      "category": "service",
+      "related_ports": [
+        22
+      ]
+    },
+    {
+      "name": "nginx",
+      "version": "1.24.0",
+      "category": "web_server",
+      "related_ports": [
+        3000
+      ]
+    },
+    {
+      "name": "Next.js",
+      "version": "15.0.3",
+      "category": "web_framework",
+      "related_ports": [
+        3000
+      ]
+    },
+    {
+      "name": "React",
+      "version": null,
+      "category": "javascript_library",
+      "related_ports": [
+        3000
+      ]
+    },
+    {
+      "name": "Node.js",
+      "version": null,
+      "category": "runtime_environment",
+      "related_ports": [
+        3000,
+        9229
+      ]
+    },
+    {
+      "name": "SQLite",
+      "version": null,
+      "category": "database",
+      "related_ports": []
+    },
+    {
+      "name": "Python",
+      "version": "3",
+      "category": "programming_language",
+      "related_ports": []
+    }
+  ],
+  "tools": [
+    {
+      "name": "Nmap",
+      "category": "reconnaissance",
+      "used_for": [
+        "Port Scanning",
+        "Service Enumeration"
+      ]
+    },
+    {
+      "name": "Burp Suite",
+      "category": "web_proxy",
+      "used_for": [
+        "Web Enumeration",
+        "Exploitation",
+        "Request Modification"
+      ]
+    },
+    {
+      "name": "Wappalyzer",
+      "category": "reconnaissance",
+      "used_for": [
+        "Technology Fingerprinting"
+      ]
+    },
+    {
+      "name": "curl",
+      "category": "utility",
+      "used_for": [
+        "Web Enumeration",
+        "API Interaction"
+      ]
+    },
+    {
+      "name": "sqlite3",
+      "category": "database_client",
+      "used_for": [
+        "Database Querying"
+      ]
+    },
+    {
+      "name": "CrackStation",
+      "category": "cracking",
+      "used_for": [
+        "Offline Password Cracking"
+      ]
+    },
+    {
+      "name": "ssh",
+      "category": "remote_access",
+      "used_for": [
+        "Remote Connection"
+      ]
+    },
+    {
+      "name": "Python",
+      "category": "programming_language",
+      "used_for": [
+        "Exploitation Scripting"
+      ]
+    },
+    {
+      "name": "netcat",
+      "category": "utility",
+      "used_for": [
+        "Reverse Shell"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "name": "Port Scanning",
+      "phase": "reconnaissance"
+    },
+    {
+      "name": "Service Enumeration",
+      "phase": "reconnaissance"
+    },
+    {
+      "name": "Technology Fingerprinting",
+      "phase": "reconnaissance"
+    },
+    {
+      "name": "Web Enumeration",
+      "phase": "reconnaissance"
+    },
+    {
+      "name": "Vulnerability Research",
+      "phase": "reconnaissance"
+    },
+    {
+      "name": "Remote Code Execution",
+      "phase": "initial_access"
+    },
+    {
+      "name": "Reverse Shell",
+      "phase": "initial_access"
+    },
+    {
+      "name": "Local Enumeration",
+      "phase": "post_exploitation"
+    },
+    {
+      "name": "Credential Disclosure",
+      "phase": "post_exploitation"
+    },
+    {
+      "name": "Offline Password Cracking",
+      "phase": "post_exploitation"
+    },
+    {
+      "name": "Privilege Escalation",
+      "phase": "privilege_escalation"
+    }
+  ],
+  "findings": [
+    {
+      "id": "WEB-001",
+      "category": "web",
+      "severity": "CRITICAL",
+      "status": "Confirmed",
+      "vulnerability": {
+        "name": "Pre-Authentication Remote Code Execution via React Server Components",
+        "search_tags": [
+          "Remote Code Execution",
+          "Remote Command Execution",
+          "Arbitrary Code Execution",
+          "Arbitrary Command Execution",
+          "Remote Command Injection",
+          "Code Execution",
+          "Command Execution",
+          "Unauthenticated Remote Code Execution",
+          "OS Command Execution",
+          "OS Command Injection",
+          "Server-Side Code Execution",
+          "RCE"
+        ]
+      },
+      "cwe": [
+        {
+          "id": "CWE-502",
+          "name": "Deserialization of Untrusted Data"
+        }
+      ],
+      "cve": [
+        "CVE-2025-55182"
+      ],
+      "owasp": [
+        "A08:2021 – Software and Data Integrity Failures"
+      ],
+      "facilitates_findings": [
+        "LPE-002"
+      ]
+    },
+    {
+      "id": "LPE-001",
+      "category": "privilege_escalation",
+      "severity": "CRITICAL",
+      "status": "Confirmed",
+      "vulnerability": {
+        "name": "Unauthenticated Node.js Inspector Remote Code Execution Leading to Root Privilege Escalation",
+        "search_tags": [
+          "Security Misconfiguration",
+          "Misconfiguration",
+          "Improper Security Configuration",
+          "Insecure Configuration",
+          "Security Configuration Error",
+          "Security Configuration Issue",
+          "Debug Mode Enabled",
+          "Debug Mode Exposure",
+          "Production Debug Mode",
+          "Debug Information Exposure",
+          "Verbose Error Disclosure",
+          "Debug Interface Exposure",
+          "Debugger Exposure",
+          "Exposed Debug Interface",
+          "Unauthenticated Debug Interface",
+          "Unauthenticated Debugger",
+          "Debugging Interface Exposure",
+          "Exposed Debugging Interface",
+          "Insecure Debug Configuration",
+          "Debug Configuration Exposure",
+          "Privileged Debug Interface",
+          "Privileged Debugger Exposure"
+        ]
+      },
+      "cwe": [
+        {
+          "id": "CWE-306",
+          "name": "Missing Authentication for Critical Function"
+        },
+        {
+          "id": "CWE-668",
+          "name": "Exposure of Resource to Wrong Sphere"
+        }
+      ],
+      "cve": [],
+      "owasp": [
+        "A05:2021 Security Misconfiguration"
+      ],
+      "facilitates_findings": []
+    },
+    {
+      "id": "LPE-002",
+      "category": "privilege_escalation",
+      "severity": "HIGH",
+      "status": "Confirmed",
+      "vulnerability": {
+        "name": "Sensitive Credential Disclosure via Accessible Application Database and Offline Password Cracking",
+        "search_tags": [
+          "Sensitive Information Disclosure",
+          "Sensitive Information Exposure",
+          "Sensitive Data Exposure",
+          "Data Leakage",
+          "Data Exposure",
+          "Information Leak",
+          "Information Disclosure",
+          "Data Disclosure",
+          "Unintended Data Disclosure",
+          "Accidental Data Exposure",
+          "Confidential Data Exposure",
+          "Credential Disclosure",
+          "Information Exposure",
+          "Authentication Data Exposure",
+          "Authentication Information Disclosure",
+          "Password Hash Disclosure",
+          "Password Hash Exposure",
+          "Password Hash Leakage",
+          "Password Database Exposure",
+          "Credential Database Exposure",
+          "User Credential Disclosure",
+          "User Account Credential Exposure",
+          "Authentication Credential Exposure",
+          "Stored Credential Exposure",
+          "Recoverable Credential Exposure",
+          "Application Database Exposure",
+          "Sensitive Database Exposure",
+          "Accessible Application Database",
+          "Database Credential Disclosure",
+          "Credential Exposure",
+          "Exposed Credentials",
+          "Compromised Credentials",
+          "Credential Leakage",
+          "Secret Exposure",
+          "Exposed Secrets",
+          "User Credential Exposure",
+          "Password Exposure",
+          "Password Credential Exposure",
+          "Exposed Passwords",
+          "Password Leakage",
+          "Credential Compromise"
+        ]
+      },
+      "cwe": [
+        {
+          "id": "CWE-22",
+          "name": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        },
+        {
+          "id": "CWE-73",
+          "name": "External Control of File Name or Path"
+        }
+      ],
+      "cve": [],
+      "owasp": [
+        "A07:2021 – Identification and Authentication Failures"
+      ],
+      "facilitates_findings": [
+        "LPE-001"
+      ]
+    }
+  ]
+}

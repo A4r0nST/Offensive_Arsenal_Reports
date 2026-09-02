@@ -1,0 +1,5 @@
+# Ignore all JSON files inside AD Reports
+/AD/Reports/**/*.json
+
+# Ignore all JSON files inside Web Reports
+/Web/Reports/**/*.json

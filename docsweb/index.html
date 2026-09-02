@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Arsenal — Hybrid Professional Engagement Reports for cybersecurity learning." />
+  <title>Arsenal | Cybersecurity Engagement Reports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <canvas id="starfield" aria-hidden="true"></canvas>
+  <div class="aurora aurora-one" aria-hidden="true"></div>
+  <div class="aurora aurora-two" aria-hidden="true"></div>
+
+  <header class="site-header reveal">
+    <a class="brand" href="#home">
+  <img src="Assets/logo.png" alt="Arsenal Logo" class="brand-logo" />
+</a>
+    <nav aria-label="Main navigation">
+      <a href="#catalog">Engagement Reports</a>
+      <a href="#approach">Our Approach</a>
+      <a href="#about">About</a>
+    </nav>
+    <span class="status"><i></i> Database online</span>
+  </header>
+
+  <main id="home">
+    <section class="hero reveal">
+      <p class="eyebrow">HYBRID PROFESSIONAL ENGAGEMENT REPORTS</p>
+      <h1>Learn from every<br /><span>compromise.</span></h1>
+      <label class="search-box" for="search-input">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.5"></circle>
+          <path d="m16 16 4.5 4.5"></path>
+        </svg>
+        <input id="search-input" type="search" placeholder="Search RCE, Nginx 1.28.0, network client…" autocomplete="off" autofocus />
+        <kbd>⌘ K</kbd>
+      </label>
+      <div class="search-notes">Search by name, difficulty, vulnerabilities, tools, skills, CVEs, CWEs, technologies, and more.</div>
+    </section>
+
+    <section class="catalog-section reveal" id="catalog">
+      <div class="catalog-heading">
+        <div>
+
+          <h2>Explore the arsenal</h2>
+        </div>
+        <p id="result-count" aria-live="polite">Loading reports...</p>
+      </div>
+
+      <div class="filters" aria-label="Difficulty filters">
+        <button class="filter active" data-filter="all">All reports</button>
+        <button class="filter easy" data-filter="Easy">Easy</button>
+        <button class="filter medium" data-filter="Medium">Medium</button>
+        <button class="filter hard" data-filter="Hard">Hard</button>
+      </div>
+
+      <div id="machine-grid" class="machine-grid"></div>
+
+      <div id="empty-state" class="empty-state" hidden>
+        <span>⌕</span>
+        <h3>No reports found</h3>
+        <p>Try another technique, technology, or difficulty level.</p>
+      </div>
+    </section>
+
+    <section class="approach reveal" id="approach">
+      <p class="eyebrow">LEARNING APPROACH</p>
+      <h2>Understand the problem.<br />Think through the path.<br /><span>Document the process and share the knowledge.</span></h2>
+    </section>
+
+    <section class="about-section reveal" id="about">
+      <div class="about-intro">
+        <p class="eyebrow">ABOUT ARSENAL</p>
+        <h2>A growing field guide<br />for curious minds.</h2>
+      </div>
+      <div class="about-copy">
+        <p>Arsenal was built to turn technical engagements into clear, reusable learning material. It brings the evidence, techniques, and lessons of each machine together in one focused place.</p>
+        <div class="about-grid">
+          <article>
+            <h3>Purpose</h3>
+            <p>Make hands-on cybersecurity learning easier to explore and connect.</p>
+          </article>
+          <article>
+            <h3>Vision</h3>
+            <p>Build an open, practical reference for the next generation of security practitioners.</p>
+          </article>
+          <article>
+            <h3>Objective</h3>
+            <p>Document each path clearly—from reconnaissance to privilege escalation.</p>
+          </article>
+          <article>
+            <h3>Creator's note</h3>
+            <p>Made by a cybersecurity learner who believes knowledge becomes more valuable when shared.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>ARSENAL / 2026</span>
+    <strong>Built for the curious mind.</strong>
+  </footer>
+
+  <dialog id="machine-modal">
+    <button class="modal-close" aria-label="Close report">×</button>
+    <div id="modal-content"></div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

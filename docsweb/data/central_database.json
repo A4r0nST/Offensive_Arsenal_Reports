@@ -1,0 +1,1185 @@
+{
+  "machines": {
+    "cohort": {
+      "slug": "cohort",
+      "machine": {
+        "name": "Cohort",
+        "platform": "HTB",
+        "operating_system": "Linux",
+        "difficulty": "Easy"
+      },
+      "description": "In this report, we analyze the compromise of Cohort, starting with the discovery of an SSRF vulnerability on the main web application that bypassed loopback validation to enumerate internal endpoints. This led to the identification of an internal Marimo notebook service running on a subdomain. Exploiting a pre-authentication terminal WebSocket RCE (CVE-2026-39987) in Marimo allowed us to gain initial access. Finally, local privilege escalation was achieved by exploiting a TOCTOU race condition in PackageKit (CVE-2026-41651) to obtain root access.",
+      "logomachine": "https://raw.githubusercontent.com/A4r0nST/Offensive_Arsenal_Reports/main/Web/Reports/Cohort/assets/Cohort.png",
+      "report_url": "https://github.com/A4r0nST/Offensive_Arsenal_Reports/blob/main/Web/Reports/Cohort/Cohort.md",
+      "network": {
+        "ports": [
+          {
+            "port": 22,
+            "protocols": [
+              "SSH"
+            ],
+            "version": "9.6p1",
+            "service": "ssh",
+            "technology": "OpenSSH"
+          },
+          {
+            "port": 80,
+            "protocols": [
+              "HTTP"
+            ],
+            "version": "1.24.0",
+            "service": "http",
+            "technology": "Nginx"
+          },
+          {
+            "port": 443,
+            "protocols": [
+              "HTTPS"
+            ],
+            "version": "1.24.0",
+            "service": "https",
+            "technology": "Nginx"
+          },
+          {
+            "port": 8888,
+            "protocols": [
+              "HTTP"
+            ],
+            "version": "0.20.4",
+            "service": "marimo",
+            "technology": "Marimo"
+          }
+        ]
+      },
+      "technologies": [
+        {
+          "name": "Nginx",
+          "version": "1.24.0"
+        },
+        {
+          "name": "Vue.js",
+          "version": "3"
+        },
+        {
+          "name": "Axios",
+          "version": null
+        },
+        {
+          "name": "Marimo",
+          "version": "0.20.4"
+        },
+        {
+          "name": "OpenSSH",
+          "version": "9.6p1"
+        },
+        {
+          "name": "PackageKit",
+          "version": "1.2.8"
+        }
+      ],
+      "tools": [
+        {
+          "name": "Nmap",
+          "category": "network_scanner"
+        },
+        {
+          "name": "curl",
+          "category": "web_utility"
+        },
+        {
+          "name": "Burp Suite",
+          "category": "web_proxy"
+        },
+        {
+          "name": "Python",
+          "category": "programming_language"
+        },
+        {
+          "name": "Netcat",
+          "category": "network_utility"
+        },
+        {
+          "name": "LinPEAS",
+          "category": "privilege_escalation_scanner"
+        },
+        {
+          "name": "dpkg",
+          "category": "package_manager"
+        }
+      ],
+      "skills": [
+        {
+          "name": "Port Scanning",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Service Enumeration",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Subdomain Enumeration",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Web Enumeration",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Server-Side Request Forgery",
+          "phase": "initial_access"
+        },
+        {
+          "name": "Bypassing SSRF Filters",
+          "phase": "initial_access"
+        },
+        {
+          "name": "WebSocket Exploitation",
+          "phase": "initial_access"
+        },
+        {
+          "name": "Remote Code Execution",
+          "phase": "initial_access"
+        },
+        {
+          "name": "Reverse Shell",
+          "phase": "initial_access"
+        },
+        {
+          "name": "Local Enumeration",
+          "phase": "privilege_escalation"
+        },
+        {
+          "name": "Race Condition Exploitation",
+          "phase": "privilege_escalation"
+        },
+        {
+          "name": "Privilege Escalation",
+          "phase": "privilege_escalation"
+        }
+      ],
+      "findings": [
+        {
+          "category": "web",
+          "vulnerability": {
+            "search_tags": [
+              "Remote Code Execution",
+              "Remote Command Execution",
+              "Arbitrary Code Execution",
+              "Arbitrary Command Execution",
+              "Remote Command Injection",
+              "Code Execution",
+              "Command Execution",
+              "Unauthenticated Remote Code Execution",
+              "OS Command Execution",
+              "RCE"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-306",
+              "name": "Missing Authentication for Critical Function"
+            }
+          ],
+          "cve": [
+            "CVE-2026-39987"
+          ],
+          "owasp": [
+            "A01:2021-Broken Access Control"
+          ]
+        },
+        {
+          "category": "web",
+          "vulnerability": {
+            "search_tags": [
+              "Server-Side Request Forgery",
+              "SSRF",
+              "Server Side Request Forgery",
+              "Server-Side Request Forgery Vulnerability",
+              "Server-Side Request Forgery Attack",
+              "Server-Side Request Forgery Flaw",
+              "Server-Side Request Manipulation",
+              "Server-Side Request Injection",
+              "Backend Request Forgery",
+              "Server-Side URL Request Forgery",
+              "Server-Side Request",
+              "Internal Request Forgery",
+              "URL Request Forgery"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-918",
+              "name": "Server-Side Request Forgery (SSRF)"
+            }
+          ],
+          "cve": [],
+          "owasp": [
+            "A10:2021-Server-Side Request Forgery (SSRF)"
+          ]
+        },
+        {
+          "category": "privilege_escalation",
+          "vulnerability": {
+            "search_tags": [
+              "Race Condition",
+              "Race Condition Vulnerability",
+              "TOCTOU",
+              "Time-of-Check to Time-of-Use",
+              "TOCTOU Vulnerability",
+              "Concurrency Vulnerability",
+              "Timing Vulnerability",
+              "Improper Synchronization",
+              "Concurrent Access Vulnerability",
+              "State Race"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-367",
+              "name": "Time-of-check Time-of-use (TOCTOU) Race Condition"
+            }
+          ],
+          "cve": [
+            "CVE-2026-41651"
+          ],
+          "owasp": [
+            "A01:2021-Broken Access Control"
+          ]
+        }
+      ]
+    },
+    "nexus": {
+      "slug": "nexus",
+      "machine": {
+        "name": "Nexus",
+        "platform": "HTB",
+        "operating_system": "Linux",
+        "difficulty": "Easy"
+      },
+      "description": "This report reveals how a simple oversight in a Gitea commit triggered a total environment compromise: exposed secrets unlocked remote code execution on Krayin CRM, internal discovery paved the way to an interactive SSH session, and manipulating malicious Git objects against an internal sync service ultimately granted full root control.",
+      "logomachine": "https://raw.githubusercontent.com/A4r0nST/Offensive_Arsenal_Reports/main/Web/Reports/Nexus/assets/Nexus.png",
+      "report_url": "https://github.com/A4r0nST/Offensive_Arsenal_Reports/blob/main/Web/Reports/Nexus/Nexus.md",
+      "network": {
+        "ports": [
+          {
+            "port": 22,
+            "protocols": [
+              "SSH"
+            ],
+            "version": "9.6p1",
+            "service": "ssh",
+            "technology": "OpenSSH"
+          },
+          {
+            "port": 80,
+            "protocols": [
+              "HTTP"
+            ],
+            "version": "1.24.0",
+            "service": "http",
+            "technology": "nginx"
+          },
+          {
+            "port": 3000,
+            "protocols": [
+              "HTTP"
+            ],
+            "version": "1.26.0",
+            "service": "gitea",
+            "technology": "Gitea"
+          }
+        ]
+      },
+      "technologies": [
+        {
+          "name": "OpenSSH",
+          "version": "9.6p1"
+        },
+        {
+          "name": "nginx",
+          "version": "1.24.0"
+        },
+        {
+          "name": "Gitea",
+          "version": "1.26.0"
+        },
+        {
+          "name": "Krayin CRM",
+          "version": "2.2.0"
+        },
+        {
+          "name": "Laravel",
+          "version": "12.54.0"
+        },
+        {
+          "name": "PHP",
+          "version": "8.3.6"
+        },
+        {
+          "name": "Python",
+          "version": "3"
+        },
+        {
+          "name": "Laravel Ignition",
+          "version": null
+        },
+        {
+          "name": "TinyMCE",
+          "version": null
+        }
+      ],
+      "tools": [
+        {
+          "name": "Nmap",
+          "category": "network_scanner"
+        },
+        {
+          "name": "Searchsploit",
+          "category": "exploit_database"
+        },
+        {
+          "name": "Git",
+          "category": "version_control"
+        },
+        {
+          "name": "Tig",
+          "category": "version_control_viewer"
+        },
+        {
+          "name": "curl",
+          "category": "web_utility"
+        },
+        {
+          "name": "Python",
+          "category": "programming_language_interpreter"
+        },
+        {
+          "name": "ssh-keygen",
+          "category": "cryptographic_utility"
+        },
+        {
+          "name": "sshpass",
+          "category": "authentication_utility"
+        },
+        {
+          "name": "ssh",
+          "category": "remote_access"
+        },
+        {
+          "name": "systemctl",
+          "category": "system_utility"
+        },
+        {
+          "name": "find",
+          "category": "file_utility"
+        }
+      ],
+      "skills": [
+        {
+          "name": "Port Scanning",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Service Enumeration",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Virtual Host Enumeration",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Git Repository Enumeration",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Credential Harvesting",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Web Application Exploitation",
+          "phase": "initial_access"
+        },
+        {
+          "name": "Remote Code Execution",
+          "phase": "initial_access"
+        },
+        {
+          "name": "Local Enumeration",
+          "phase": "post_exploitation"
+        },
+        {
+          "name": "Credential Reuse",
+          "phase": "privilege_escalation"
+        },
+        {
+          "name": "Directory Traversal",
+          "phase": "privilege_escalation"
+        },
+        {
+          "name": "Arbitrary File Write",
+          "phase": "privilege_escalation"
+        },
+        {
+          "name": "Git Object Manipulation",
+          "phase": "privilege_escalation"
+        }
+      ],
+      "findings": [
+        {
+          "category": "web",
+          "vulnerability": {
+            "search_tags": [
+              "Remote Code Execution",
+              "Remote Command Execution",
+              "Arbitrary Code Execution",
+              "Arbitrary Command Execution",
+              "Remote Command Injection",
+              "Code Execution",
+              "Command Execution",
+              "Authenticated Remote Code Execution",
+              "OS Command Execution",
+              "Server-Side Code Execution"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-434",
+              "name": "Unrestricted Upload of File with Dangerous Type"
+            }
+          ],
+          "cve": [
+            "CVE-2026-38526"
+          ],
+          "owasp": [
+            "A03:2021-Injection"
+          ]
+        },
+        {
+          "category": "web",
+          "vulnerability": {
+            "search_tags": [
+              "Sensitive Information in Source Code",
+              "Sensitive Information Disclosure",
+              "Sensitive Data in Source Code",
+              "Hardcoded Sensitive Information",
+              "Hardcoded Secrets",
+              "Secrets in Source Code",
+              "Sensitive Information Exposure",
+              "Sensitive Data Exposure",
+              "Credential Exposure",
+              "Data Leakage",
+              "Data Exposure",
+              "Information Leak",
+              "Information Disclosure",
+              "Data Disclosure",
+              "Unintended Data Disclosure",
+              "Accidental Data Exposure",
+              "Confidential Data Exposure"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-200",
+              "name": "Exposure of Sensitive Information to an Unauthorized Actor"
+            },
+            {
+              "id": "CWE-540",
+              "name": "Inclusion of Sensitive Information in Source Code"
+            }
+          ],
+          "cve": [],
+          "owasp": [
+            "A02:2021-Cryptographic Failures",
+            "A05:2021-Security Misconfiguration"
+          ]
+        },
+        {
+          "category": "web",
+          "vulnerability": {
+            "search_tags": [
+              "Security Misconfiguration",
+              "Misconfiguration",
+              "Improper Security Configuration",
+              "Insecure Configuration",
+              "Security Configuration Error",
+              "Security Configuration Issue",
+              "Debug Mode Enabled",
+              "Debug Mode Exposure",
+              "Production Debug Mode",
+              "Debug Information Exposure",
+              "Verbose Error Disclosure",
+              "Information Disclosure"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-489",
+              "name": "Active Debug Code"
+            },
+            {
+              "id": "CWE-215",
+              "name": "Information Exposure Through of Use of a Web Server Debug Page"
+            }
+          ],
+          "cve": [],
+          "owasp": [
+            "A05:2021-Security Misconfiguration"
+          ]
+        },
+        {
+          "category": "privilege_escalation",
+          "vulnerability": {
+            "search_tags": [
+              "Path Traversal",
+              "Directory Traversal",
+              "File Path Traversal",
+              "File System Traversal",
+              "Directory Escape",
+              "Path Escape",
+              "Relative Path Traversal",
+              "Path Manipulation"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-22",
+              "name": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+            },
+            {
+              "id": "CWE-73",
+              "name": "External Control of File Name or Path"
+            }
+          ],
+          "cve": [],
+          "owasp": [
+            "A05:2021-Security Misconfiguration"
+          ]
+        },
+        {
+          "category": "privilege_escalation",
+          "vulnerability": {
+            "search_tags": [
+              "Credential Reuse",
+              "Credential Exposure",
+              "Credential Disclosure",
+              "Exposed Credentials",
+              "Compromised Credentials",
+              "Credential Leakage",
+              "Sensitive Information Exposure",
+              "Sensitive Data Exposure",
+              "Sensitive Information Disclosure",
+              "Information Disclosure",
+              "Information Exposure",
+              "Data Exposure",
+              "Data Leakage",
+              "Data Disclosure",
+              "Information Leak",
+              "Secret Exposure",
+              "Exposed Secrets",
+              "Environment File Exposure"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-798",
+              "name": "Use of Hard-coded Credentials"
+            }
+          ],
+          "cve": [],
+          "owasp": [
+            "A07:2021-Identification and Authentication Failures"
+          ]
+        }
+      ]
+    },
+    "paperwork": {
+      "slug": "paperwork",
+      "machine": {
+        "name": "Paperwork",
+        "platform": "HTB",
+        "operating_system": "Linux",
+        "difficulty": "Easy"
+      },
+      "description": "This report analyzes the compromise of Paperwork, showing how exposed source code led to unauthenticated command injection in a custom LPD service for initial access, internal discovery uncovered a JetDirect/PJL service to pivot deeper into the target, and subverting a privileged system daemon ultimately granted complete root control.",
+      "logomachine": "https://raw.githubusercontent.com/A4r0nST/Offensive_Arsenal_Reports/main/Web/Reports/Paperwork/assets/Paperwork.png",
+      "report_url": "https://github.com/A4r0nST/Offensive_Arsenal_Reports/blob/main/Web/Reports/Paperwork/Paperwork.md",
+      "network": {
+        "ports": [
+          {
+            "port": 22,
+            "protocols": [
+              "SSH"
+            ],
+            "version": "10.0p2",
+            "service": "ssh",
+            "technology": "OpenSSH"
+          },
+          {
+            "port": 80,
+            "protocols": [
+              "HTTP"
+            ],
+            "version": "1.28.0",
+            "service": "http",
+            "technology": "nginx"
+          },
+          {
+            "port": 1515,
+            "protocols": [
+              "LPD"
+            ],
+            "version": "Custom",
+            "service": "ifor-protocol?",
+            "technology": "Custom Python service"
+          },
+          {
+            "port": 9100,
+            "protocols": [
+              "JETDIRECT",
+              "PJL"
+            ],
+            "version": "Local/Internal",
+            "service": "jetdirect-pjl",
+            "technology": "Printer service"
+          }
+        ]
+      },
+      "technologies": [
+        {
+          "name": "OpenSSH",
+          "version": "10.0p2"
+        },
+        {
+          "name": "nginx",
+          "version": "1.28.0"
+        },
+        {
+          "name": "Python",
+          "version": null
+        },
+        {
+          "name": "JetDirect",
+          "version": null
+        },
+        {
+          "name": "PJL",
+          "version": null
+        },
+        {
+          "name": "LPD",
+          "version": null
+        },
+        {
+          "name": "Unix domain socket",
+          "version": null
+        }
+      ],
+      "tools": [
+        {
+          "name": "Nmap",
+          "category": "network_scanner"
+        },
+        {
+          "name": "curl",
+          "category": "web_client"
+        },
+        {
+          "name": "Python",
+          "category": "programming_language"
+        },
+        {
+          "name": "Netcat",
+          "category": "network_client"
+        },
+        {
+          "name": "ssh-keygen",
+          "category": "credential_generator"
+        },
+        {
+          "name": "ssh",
+          "category": "remote_access_client"
+        },
+        {
+          "name": "penelope",
+          "category": "reverse_shell_handler"
+        },
+        {
+          "name": "unzip",
+          "category": "utility"
+        },
+        {
+          "name": "printf",
+          "category": "utility"
+        }
+      ],
+      "skills": [
+        {
+          "name": "Port Scanning",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Service Enumeration",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Web Enumeration",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Source Code Review",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "OS Command Injection",
+          "phase": "initial_access"
+        },
+        {
+          "name": "Remote Code Execution",
+          "phase": "initial_access"
+        },
+        {
+          "name": "Reverse Shell",
+          "phase": "initial_access"
+        },
+        {
+          "name": "Local Enumeration",
+          "phase": "post_exploitation"
+        },
+        {
+          "name": "Path Traversal",
+          "phase": "privilege_escalation"
+        },
+        {
+          "name": "Arbitrary File Write",
+          "phase": "privilege_escalation"
+        },
+        {
+          "name": "Pivoting",
+          "phase": "privilege_escalation"
+        },
+        {
+          "name": "Privilege Escalation",
+          "phase": "privilege_escalation"
+        },
+        {
+          "name": "File Descriptor Passing",
+          "phase": "privilege_escalation"
+        },
+        {
+          "name": "Credential Disclosure",
+          "phase": "privilege_escalation"
+        }
+      ],
+      "findings": [
+        {
+          "category": "web",
+          "vulnerability": {
+            "search_tags": [
+              "Sensitive Source Code Exposure",
+              "Sensitive Source Code Disclosure",
+              "Source Code Exposure",
+              "Source Code Disclosure",
+              "Source Code Leakage",
+              "Confidential Source Code Exposure",
+              "Confidential Source Code Disclosure",
+              "Private Source Code Exposure",
+              "Source Code Information Disclosure",
+              "Source Code Information Leakage"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-538",
+              "name": "Insertion of Sensitive Information into Externally-Accessible File or Directory"
+            }
+          ],
+          "cve": [],
+          "owasp": [
+            "A05:2021 Security Misconfiguration"
+          ]
+        },
+        {
+          "category": "web",
+          "vulnerability": {
+            "search_tags": [
+              "Remote Code Execution",
+              "Remote Command Execution",
+              "Arbitrary Code Execution",
+              "Arbitrary Command Execution",
+              "Remote Command Injection",
+              "Code Execution",
+              "Command Execution",
+              "Unauthenticated Remote Code Execution",
+              "OS Command Injection",
+              "OS Command Execution"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-78",
+              "name": "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+            }
+          ],
+          "cve": [],
+          "owasp": [
+            "A03:2021 Injection"
+          ]
+        },
+        {
+          "category": "privilege_escalation",
+          "vulnerability": {
+            "search_tags": [
+              "Directory Path Traversal",
+              "Arbitrary File Write",
+              "Arbitrary File Overwrite",
+              "File Write",
+              "File Overwrite",
+              "Path Traversal",
+              "Directory Traversal",
+              "File Path Traversal",
+              "File System Traversal",
+              "Directory Escape",
+              "Path Escape",
+              "Relative Path Traversal",
+              "Path Manipulation"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-22",
+              "name": "Path Traversal"
+            },
+            {
+              "id": "CWE-73",
+              "name": "External Control of File Name or Path"
+            }
+          ],
+          "cve": [],
+          "owasp": [
+            "A01:2021 – Broken Access Control"
+          ]
+        },
+        {
+          "category": "privilege_escalation",
+          "vulnerability": {
+            "search_tags": [
+              "Privileged File Descriptor Disclosure",
+              "File Descriptor Disclosure",
+              "File Descriptor Exposure",
+              "File Descriptor Leak",
+              "File Descriptor Information Disclosure",
+              "Information Disclosure",
+              "Data Exposure"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-668",
+              "name": "Exposure of Resource to Wrong Sphere"
+            }
+          ],
+          "cve": [],
+          "owasp": [
+            "A01:2021 – Broken Access Control"
+          ]
+        }
+      ]
+    },
+    "reactor": {
+      "slug": "reactor",
+      "machine": {
+        "name": "Reactor",
+        "platform": "HTB",
+        "operating_system": "Linux",
+        "difficulty": "Easy"
+      },
+      "description": "In this report, we analyze the compromise of Reactor, starting with the identification of Next.js 15.0.3 on port 3000. Exploitation of CVE-2025-55182 (React Server Components RCE) provided initial access as the node user. Local enumeration revealed an SQLite database containing password hashes, which were cracked offline to gain SSH access as the engineer user. Finally, privilege escalation was achieved by abusing an unauthenticated Node.js Inspector interface running as root on port 9229 to execute arbitrary commands.",
+      "logomachine": "https://raw.githubusercontent.com/A4r0nST/Offensive_Arsenal_Reports/main/Web/Reports/Reactor/assets/Reactor.png",
+      "report_url": "https://github.com/A4r0nST/Offensive_Arsenal_Reports/blob/main/Web/Reports/Reactor/Reactor.md",
+      "network": {
+        "ports": [
+          {
+            "port": 22,
+            "protocols": [
+              "SSH"
+            ],
+            "version": "9.6p1",
+            "service": "ssh",
+            "technology": "OpenSSH"
+          },
+          {
+            "port": 3000,
+            "protocols": [
+              "HTTP"
+            ],
+            "version": "1.24.0",
+            "service": "http",
+            "technology": "nginx"
+          },
+          {
+            "port": 9229,
+            "protocols": [
+              "HTTP",
+              "WEBSOCKET"
+            ],
+            "version": null,
+            "service": "node-inspector",
+            "technology": "Node.js Inspector"
+          }
+        ]
+      },
+      "technologies": [
+        {
+          "name": "OpenSSH",
+          "version": "9.6p1"
+        },
+        {
+          "name": "nginx",
+          "version": "1.24.0"
+        },
+        {
+          "name": "Next.js",
+          "version": "15.0.3"
+        },
+        {
+          "name": "React",
+          "version": null
+        },
+        {
+          "name": "Node.js",
+          "version": null
+        },
+        {
+          "name": "SQLite",
+          "version": null
+        },
+        {
+          "name": "Python",
+          "version": "3"
+        }
+      ],
+      "tools": [
+        {
+          "name": "Nmap",
+          "category": "reconnaissance"
+        },
+        {
+          "name": "Burp Suite",
+          "category": "web_proxy"
+        },
+        {
+          "name": "Wappalyzer",
+          "category": "reconnaissance"
+        },
+        {
+          "name": "curl",
+          "category": "utility"
+        },
+        {
+          "name": "sqlite3",
+          "category": "database_client"
+        },
+        {
+          "name": "CrackStation",
+          "category": "cracking"
+        },
+        {
+          "name": "ssh",
+          "category": "remote_access"
+        },
+        {
+          "name": "Python",
+          "category": "programming_language"
+        },
+        {
+          "name": "netcat",
+          "category": "utility"
+        }
+      ],
+      "skills": [
+        {
+          "name": "Port Scanning",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Service Enumeration",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Technology Fingerprinting",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Web Enumeration",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Vulnerability Research",
+          "phase": "reconnaissance"
+        },
+        {
+          "name": "Remote Code Execution",
+          "phase": "initial_access"
+        },
+        {
+          "name": "Reverse Shell",
+          "phase": "initial_access"
+        },
+        {
+          "name": "Local Enumeration",
+          "phase": "post_exploitation"
+        },
+        {
+          "name": "Credential Disclosure",
+          "phase": "post_exploitation"
+        },
+        {
+          "name": "Offline Password Cracking",
+          "phase": "post_exploitation"
+        },
+        {
+          "name": "Privilege Escalation",
+          "phase": "privilege_escalation"
+        }
+      ],
+      "findings": [
+        {
+          "category": "web",
+          "vulnerability": {
+            "search_tags": [
+              "Remote Code Execution",
+              "Remote Command Execution",
+              "Arbitrary Code Execution",
+              "Arbitrary Command Execution",
+              "Remote Command Injection",
+              "Code Execution",
+              "Command Execution",
+              "Unauthenticated Remote Code Execution",
+              "OS Command Execution",
+              "OS Command Injection",
+              "Server-Side Code Execution",
+              "RCE"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-502",
+              "name": "Deserialization of Untrusted Data"
+            }
+          ],
+          "cve": [
+            "CVE-2025-55182"
+          ],
+          "owasp": [
+            "A08:2021 – Software and Data Integrity Failures"
+          ]
+        },
+        {
+          "category": "privilege_escalation",
+          "vulnerability": {
+            "search_tags": [
+              "Security Misconfiguration",
+              "Misconfiguration",
+              "Improper Security Configuration",
+              "Insecure Configuration",
+              "Security Configuration Error",
+              "Security Configuration Issue",
+              "Debug Mode Enabled",
+              "Debug Mode Exposure",
+              "Production Debug Mode",
+              "Debug Information Exposure",
+              "Verbose Error Disclosure",
+              "Debug Interface Exposure",
+              "Debugger Exposure",
+              "Exposed Debug Interface",
+              "Unauthenticated Debug Interface",
+              "Unauthenticated Debugger",
+              "Debugging Interface Exposure",
+              "Exposed Debugging Interface",
+              "Insecure Debug Configuration",
+              "Debug Configuration Exposure",
+              "Privileged Debug Interface",
+              "Privileged Debugger Exposure"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-306",
+              "name": "Missing Authentication for Critical Function"
+            },
+            {
+              "id": "CWE-668",
+              "name": "Exposure of Resource to Wrong Sphere"
+            }
+          ],
+          "cve": [],
+          "owasp": [
+            "A05:2021 Security Misconfiguration"
+          ]
+        },
+        {
+          "category": "privilege_escalation",
+          "vulnerability": {
+            "search_tags": [
+              "Sensitive Information Disclosure",
+              "Sensitive Information Exposure",
+              "Sensitive Data Exposure",
+              "Data Leakage",
+              "Data Exposure",
+              "Information Leak",
+              "Information Disclosure",
+              "Data Disclosure",
+              "Unintended Data Disclosure",
+              "Accidental Data Exposure",
+              "Confidential Data Exposure",
+              "Credential Disclosure",
+              "Information Exposure",
+              "Authentication Data Exposure",
+              "Authentication Information Disclosure",
+              "Password Hash Disclosure",
+              "Password Hash Exposure",
+              "Password Hash Leakage",
+              "Password Database Exposure",
+              "Credential Database Exposure",
+              "User Credential Disclosure",
+              "User Account Credential Exposure",
+              "Authentication Credential Exposure",
+              "Stored Credential Exposure",
+              "Recoverable Credential Exposure",
+              "Application Database Exposure",
+              "Sensitive Database Exposure",
+              "Accessible Application Database",
+              "Database Credential Disclosure",
+              "Credential Exposure",
+              "Exposed Credentials",
+              "Compromised Credentials",
+              "Credential Leakage",
+              "Secret Exposure",
+              "Exposed Secrets",
+              "User Credential Exposure",
+              "Password Exposure",
+              "Password Credential Exposure",
+              "Exposed Passwords",
+              "Password Leakage",
+              "Credential Compromise"
+            ]
+          },
+          "cwe": [
+            {
+              "id": "CWE-22",
+              "name": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+            },
+            {
+              "id": "CWE-73",
+              "name": "External Control of File Name or Path"
+            }
+          ],
+          "cve": [],
+          "owasp": [
+            "A07:2021 – Identification and Authentication Failures"
+          ]
+        }
+      ]
+    }
+  }
+}

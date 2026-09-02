@@ -1,0 +1,348 @@
+{
+  "schema_version": "1.0",
+  "machine": {
+    "name": "Cohort",
+    "slug": "cohort",
+    "platform": "HTB",
+    "operating_system": "Linux",
+    "difficulty": "Easy",
+    "date_started": "2026-08-08",
+    "date_finished": "2026-08-10",
+    "author": "TheCyberGeek"
+  },
+  "description": "In this report, we analyze the compromise of Cohort, starting with the discovery of an SSRF vulnerability on the main web application that bypassed loopback validation to enumerate internal endpoints. This led to the identification of an internal Marimo notebook service running on a subdomain. Exploiting a pre-authentication terminal WebSocket RCE (CVE-2026-39987) in Marimo allowed us to gain initial access as the marimo user. Finally, local privilege escalation was achieved by exploiting a TOCTOU race condition in PackageKit (CVE-2026-41651) to obtain root access.",
+  "network": {
+    "hosts": [
+      {
+        "ip": "10.129.79.174",
+        "domains": [
+          {
+            "name": "cohort.htb",
+            "subdomain": null,
+            "status": null
+          },
+          {
+            "name": "cohort.htb",
+            "subdomain": "nb-1be3782a8afd3ad5",
+            "status": 200
+          }
+        ]
+      }
+    ],
+    "ports": [
+      {
+        "port": 22,
+        "transport_protocol": "TCP",
+        "protocols": [
+          "SSH"
+        ],
+        "service": "ssh",
+        "technology": "OpenSSH",
+        "version": "9.6p1",
+        "exposure": "external",
+        "discovered_phase": "reconnaissance"
+      },
+      {
+        "port": 80,
+        "transport_protocol": "TCP",
+        "protocols": [
+          "HTTP"
+        ],
+        "service": "http",
+        "technology": "Nginx",
+        "version": "1.24.0",
+        "exposure": "external",
+        "discovered_phase": "reconnaissance"
+      },
+      {
+        "port": 443,
+        "transport_protocol": "TCP",
+        "protocols": [
+          "HTTPS"
+        ],
+        "service": "https",
+        "technology": "Nginx",
+        "version": "1.24.0",
+        "exposure": "external",
+        "discovered_phase": "reconnaissance"
+      },
+      {
+        "port": 8888,
+        "transport_protocol": "TCP",
+        "protocols": [
+          "HTTP"
+        ],
+        "service": "marimo",
+        "technology": "Marimo",
+        "version": "0.20.4",
+        "exposure": "local_internal",
+        "discovered_phase": "initial_access"
+      }
+    ]
+  },
+  "technologies": [
+    {
+      "name": "Nginx",
+      "version": "1.24.0",
+      "category": "web_server",
+      "related_ports": [
+        80,
+        443
+      ]
+    },
+    {
+      "name": "Vue.js",
+      "version": "3",
+      "category": "frontend_framework",
+      "related_ports": [
+        80,
+        443
+      ]
+    },
+    {
+      "name": "Axios",
+      "version": null,
+      "category": "library",
+      "related_ports": [
+        80,
+        443
+      ]
+    },
+    {
+      "name": "Marimo",
+      "version": "0.20.4",
+      "category": "application",
+      "related_ports": [
+        443,
+        8888
+      ]
+    },
+    {
+      "name": "OpenSSH",
+      "version": "9.6p1",
+      "category": "remote_access",
+      "related_ports": [
+        22
+      ]
+    },
+    {
+      "name": "PackageKit",
+      "version": "1.2.8",
+      "category": "system_service",
+      "related_ports": []
+    }
+  ],
+  "tools": [
+    {
+      "name": "Nmap",
+      "category": "network_scanner",
+      "used_for": [
+        "Port scanning",
+        "Service enumeration"
+      ]
+    },
+    {
+      "name": "curl",
+      "category": "web_utility",
+      "used_for": [
+        "HTTP requests",
+        "API version enumeration"
+      ]
+    },
+    {
+      "name": "Burp Suite",
+      "category": "web_proxy",
+      "used_for": [
+        "Intercepting HTTP requests",
+        "Fuzzing internal endpoints",
+        "SSRF exploitation"
+      ]
+    },
+    {
+      "name": "Python",
+      "category": "programming_language",
+      "used_for": [
+        "Running exploit scripts",
+        "Executing custom WebSocket RCE script"
+      ]
+    },
+    {
+      "name": "Netcat",
+      "category": "network_utility",
+      "used_for": [
+        "Receiving reverse shell connection"
+      ]
+    },
+    {
+      "name": "LinPEAS",
+      "category": "privilege_escalation_scanner",
+      "used_for": [
+        "Local privilege escalation enumeration"
+      ]
+    },
+    {
+      "name": "dpkg",
+      "category": "package_manager",
+      "used_for": [
+        "Verifying installed PackageKit version"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "name": "Port Scanning",
+      "phase": "reconnaissance"
+    },
+    {
+      "name": "Service Enumeration",
+      "phase": "reconnaissance"
+    },
+    {
+      "name": "Subdomain Enumeration",
+      "phase": "reconnaissance"
+    },
+    {
+      "name": "Web Enumeration",
+      "phase": "reconnaissance"
+    },
+    {
+      "name": "Server-Side Request Forgery",
+      "phase": "initial_access"
+    },
+    {
+      "name": "Bypassing SSRF Filters",
+      "phase": "initial_access"
+    },
+    {
+      "name": "WebSocket Exploitation",
+      "phase": "initial_access"
+    },
+    {
+      "name": "Remote Code Execution",
+      "phase": "initial_access"
+    },
+    {
+      "name": "Reverse Shell",
+      "phase": "initial_access"
+    },
+    {
+      "name": "Local Enumeration",
+      "phase": "privilege_escalation"
+    },
+    {
+      "name": "Race Condition Exploitation",
+      "phase": "privilege_escalation"
+    },
+    {
+      "name": "Privilege Escalation",
+      "phase": "privilege_escalation"
+    }
+  ],
+  "findings": [
+    {
+      "id": "WEB-001",
+      "category": "web",
+      "severity": "CRITICAL",
+      "status": "Confirmed",
+      "vulnerability": {
+        "name": "Pre-Auth Terminal WebSocket RCE (CVE-2026-39987)",
+        "search_tags": [
+          "Remote Code Execution",
+          "Remote Command Execution",
+          "Arbitrary Code Execution",
+          "Arbitrary Command Execution",
+          "Remote Command Injection",
+          "Code Execution",
+          "Command Execution",
+          "Unauthenticated Remote Code Execution",
+          "OS Command Execution",
+          "RCE"
+        ]
+      },
+      "cwe": [
+        {
+          "id": "CWE-306",
+          "name": "Missing Authentication for Critical Function"
+        }
+      ],
+      "cve": [
+        "CVE-2026-39987"
+      ],
+      "owasp": [
+        "A01:2021-Broken Access Control"
+      ],
+      "facilitates_findings": []
+    },
+    {
+      "id": "WEB-002",
+      "category": "web",
+      "severity": "HIGH",
+      "status": "Confirmed",
+      "vulnerability": {
+        "name": "SSRF via Incomplete Loopback Validation",
+        "search_tags": [
+          "Server-Side Request Forgery",
+          "SSRF",
+          "Server Side Request Forgery",
+          "Server-Side Request Forgery Vulnerability",
+          "Server-Side Request Forgery Attack",
+          "Server-Side Request Forgery Flaw",
+          "Server-Side Request Manipulation",
+          "Server-Side Request Injection",
+          "Backend Request Forgery",
+          "Server-Side URL Request Forgery",
+          "Server-Side Request",
+          "Internal Request Forgery",
+          "URL Request Forgery"
+        ]
+      },
+      "cwe": [
+        {
+          "id": "CWE-918",
+          "name": "Server-Side Request Forgery (SSRF)"
+        }
+      ],
+      "cve": [],
+      "owasp": [
+        "A10:2021-Server-Side Request Forgery (SSRF)"
+      ],
+      "facilitates_findings": [
+        "WEB-001"
+      ]
+    },
+    {
+      "id": "LPE-001",
+      "category": "privilege_escalation",
+      "severity": "CRITICAL",
+      "status": "Confirmed",
+      "vulnerability": {
+        "name": "PackageKit TOCTOU Race Condition (CVE-2026-41651)",
+        "search_tags": [
+          "Race Condition",
+          "Race Condition Vulnerability",
+          "TOCTOU",
+          "Time-of-Check to Time-of-Use",
+          "TOCTOU Vulnerability",
+          "Concurrency Vulnerability",
+          "Timing Vulnerability",
+          "Improper Synchronization",
+          "Concurrent Access Vulnerability",
+          "State Race"
+        ]
+      },
+      "cwe": [
+        {
+          "id": "CWE-367",
+          "name": "Time-of-check Time-of-use (TOCTOU) Race Condition"
+        }
+      ],
+      "cve": [
+        "CVE-2026-41651"
+      ],
+      "owasp": [
+        "A01:2021-Broken Access Control"
+      ],
+      "facilitates_findings": []
+    }
+  ]
+}

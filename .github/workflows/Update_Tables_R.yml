@@ -1,0 +1,79 @@
+name: Update Report Tables
+
+# Regenera las tablas Web y AD dentro de Technical_Reports/README.md a
+# partir de docsweb/data/central_database.json en cada push a main.
+# Todo vive en este .yml: usa jq (preinstalado en ubuntu-latest) para
+# leer el JSON y awk para reemplazar cada bloque entre sus marcadores:
+#   <!-- TABLE_START_WEB --> / <!-- TABLE_END_WEB -->
+#   <!-- TABLE_START_AD -->  / <!-- TABLE_END_AD -->
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docsweb/data/central_database.json"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update-tables:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Regenerate tables from central_database.json
+        run: |
+          set -euo pipefail
+          DB="docsweb/data/central_database.json"
+          README="Technical_Reports/README.md"
+
+          generate_table() {
+            local marker="$1"
+            local rows
+            rows=$(jq -r --arg marker "$marker" '
+              .machines
+              | to_entries
+              | map(select(((.value.report_url // "") | ascii_downcase) | contains($marker)))
+              | sort_by((.value.machine.name // .key) | ascii_downcase)
+              | .[]
+              | "| **\(.value.machine.name // .key)** | `\(.value.machine.operating_system // "-")` | \(.value.machine.platform // "-") | \(.value.machine.difficulty // "-") | [View Report](\(.value.report_url // "#")) |"
+            ' "$DB")
+
+            if [ -z "$rows" ]; then
+              printf '_No reports published yet._\n'
+            else
+              printf '| Machine / Target | OS | Platform | Difficulty | Report / Writeup |\n| :--- | :---: | :---: | :---: | :---: |\n%s\n' "$rows"
+            fi
+          }
+
+          replace_block() {
+            local start="$1" end="$2" table="$3"
+            awk -v table="$table" -v start="$start" -v end="$end" '
+              BEGIN { printing = 1 }
+              index($0, start) { print; print table; printing = 0; next }
+              index($0, end)   { printing = 1 }
+              printing { print }
+            ' "$README" > "$README.tmp" && mv "$README.tmp" "$README"
+          }
+
+          WEB_TABLE=$(generate_table "/web/")
+          AD_TABLE=$(generate_table "/ad/")
+
+          replace_block "<!-- TABLE_START_WEB -->" "<!-- TABLE_END_WEB -->" "$WEB_TABLE"
+          replace_block "<!-- TABLE_START_AD -->"  "<!-- TABLE_END_AD -->"  "$AD_TABLE"
+
+      - name: Commit and push changes (if any)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Technical_Reports/README.md
+          if git diff --cached --quiet; then
+            echo "Sin cambios en las tablas, no se hace commit."
+          else
+            git commit -m "docs: auto-update report tables from central_database.json [skip ci]"
+            git push
+          fi

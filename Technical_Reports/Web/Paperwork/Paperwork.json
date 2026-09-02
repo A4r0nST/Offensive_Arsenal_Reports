@@ -1,0 +1,405 @@
+{
+  "schema_version": "1.0",
+  "machine": {
+    "name": "Paperwork",
+    "slug": "paperwork",
+    "platform": "HTB",
+    "operating_system": "Linux",
+    "difficulty": "Easy",
+    "date_started": "2026-08-10",
+    "date_finished": "2026-08-13",
+    "author": "LazyTitan33"
+  },
+  "description": "In this report, we analyze the compromise of Paperwork, starting with the discovery of an exposed source code archive on a web application. Reviewing the source code revealed an unauthenticated OS command injection vulnerability in a custom LPD-like service, yielding an initial foothold as the lp user. From there, local enumeration uncovered an internal JetDirect/PJL service vulnerable to path traversal, which was exploited to write an SSH key and pivot to the archivist user. Finally, a privileged daemon was abused to leak a root-opened file descriptor via SCM_RIGHTS, disclosing administrative credentials and granting full root access.",
+  "network": {
+    "hosts": [
+      {
+        "ip": "10.129.87.16",
+        "domains": [
+          {
+            "name": "paperwork.htb",
+            "subdomain": null,
+            "status": 200
+          }
+        ]
+      }
+    ],
+    "ports": [
+      {
+        "port": 22,
+        "transport_protocol": "TCP",
+        "protocols": [
+          "SSH"
+        ],
+        "service": "ssh",
+        "technology": "OpenSSH",
+        "version": "10.0p2",
+        "exposure": "external",
+        "discovered_phase": "reconnaissance"
+      },
+      {
+        "port": 80,
+        "transport_protocol": "TCP",
+        "protocols": [
+          "HTTP"
+        ],
+        "service": "http",
+        "technology": "nginx",
+        "version": "1.28.0",
+        "exposure": "external",
+        "discovered_phase": "reconnaissance"
+      },
+      {
+        "port": 1515,
+        "transport_protocol": "TCP",
+        "protocols": [
+          "LPD"
+        ],
+        "service": "ifor-protocol?",
+        "technology": "Custom Python service",
+        "version": "Custom",
+        "exposure": "external",
+        "discovered_phase": "reconnaissance"
+      },
+      {
+        "port": 9100,
+        "transport_protocol": "TCP",
+        "protocols": [
+          "JETDIRECT",
+          "PJL"
+        ],
+        "service": "jetdirect-pjl",
+        "technology": "Printer service",
+        "version": "Local/Internal",
+        "exposure": "local_internal",
+        "discovered_phase": "post_exploitation"
+      }
+    ]
+  },
+  "technologies": [
+    {
+      "name": "OpenSSH",
+      "version": "10.0p2",
+      "category": "remote_access",
+      "related_ports": [
+        22
+      ]
+    },
+    {
+      "name": "nginx",
+      "version": "1.28.0",
+      "category": "web_server",
+      "related_ports": [
+        80
+      ]
+    },
+    {
+      "name": "Python",
+      "version": null,
+      "category": "programming_language",
+      "related_ports": [
+        1515
+      ]
+    },
+    {
+      "name": "JetDirect",
+      "version": null,
+      "category": "printer_protocol",
+      "related_ports": [
+        9100
+      ]
+    },
+    {
+      "name": "PJL",
+      "version": null,
+      "category": "printer_protocol",
+      "related_ports": [
+        9100
+      ]
+    },
+    {
+      "name": "LPD",
+      "version": null,
+      "category": "printer_protocol",
+      "related_ports": [
+        1515
+      ]
+    },
+    {
+      "name": "Unix domain socket",
+      "version": null,
+      "category": "ipc",
+      "related_ports": []
+    }
+  ],
+  "tools": [
+    {
+      "name": "Nmap",
+      "category": "network_scanner",
+      "used_for": [
+        "Port scanning",
+        "Service enumeration"
+      ]
+    },
+    {
+      "name": "curl",
+      "category": "web_client",
+      "used_for": [
+        "Web enumeration",
+        "Downloading source code archive"
+      ]
+    },
+    {
+      "name": "Python",
+      "category": "programming_language",
+      "used_for": [
+        "Executing exploit scripts",
+        "Running local HTTP server",
+        "Interacting with Unix domain socket"
+      ]
+    },
+    {
+      "name": "Netcat",
+      "category": "network_client",
+      "used_for": [
+        "Interacting with PJL service",
+        "Establishing reverse shell listener"
+      ]
+    },
+    {
+      "name": "ssh-keygen",
+      "category": "credential_generator",
+      "used_for": [
+        "Generating SSH key pair"
+      ]
+    },
+    {
+      "name": "ssh",
+      "category": "remote_access_client",
+      "used_for": [
+        "Connecting to target via SSH"
+      ]
+    },
+    {
+      "name": "penelope",
+      "category": "reverse_shell_handler",
+      "used_for": [
+        "Listening for reverse shells",
+        "Managing reverse shell sessions"
+      ]
+    },
+    {
+      "name": "unzip",
+      "category": "utility",
+      "used_for": [
+        "Extracting source code archive"
+      ]
+    },
+    {
+      "name": "printf",
+      "category": "utility",
+      "used_for": [
+        "Writing exploit payloads",
+        "Triggering local daemon"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "name": "Port Scanning",
+      "phase": "reconnaissance"
+    },
+    {
+      "name": "Service Enumeration",
+      "phase": "reconnaissance"
+    },
+    {
+      "name": "Web Enumeration",
+      "phase": "reconnaissance"
+    },
+    {
+      "name": "Source Code Review",
+      "phase": "reconnaissance"
+    },
+    {
+      "name": "OS Command Injection",
+      "phase": "initial_access"
+    },
+    {
+      "name": "Remote Code Execution",
+      "phase": "initial_access"
+    },
+    {
+      "name": "Reverse Shell",
+      "phase": "initial_access"
+    },
+    {
+      "name": "Local Enumeration",
+      "phase": "post_exploitation"
+    },
+    {
+      "name": "Path Traversal",
+      "phase": "privilege_escalation"
+    },
+    {
+      "name": "Arbitrary File Write",
+      "phase": "privilege_escalation"
+    },
+    {
+      "name": "Pivoting",
+      "phase": "privilege_escalation"
+    },
+    {
+      "name": "Privilege Escalation",
+      "phase": "privilege_escalation"
+    },
+    {
+      "name": "File Descriptor Passing",
+      "phase": "privilege_escalation"
+    },
+    {
+      "name": "Credential Disclosure",
+      "phase": "privilege_escalation"
+    }
+  ],
+  "findings": [
+    {
+      "id": "WEB-002",
+      "category": "web",
+      "severity": "MEDIUM",
+      "status": "Confirmed",
+      "vulnerability": {
+        "name": "Sensitive Source Code / Archive Exposure",
+        "search_tags": [
+          "Sensitive Source Code Exposure",
+          "Sensitive Source Code Disclosure",
+          "Source Code Exposure",
+          "Source Code Disclosure",
+          "Source Code Leakage",
+          "Confidential Source Code Exposure",
+          "Confidential Source Code Disclosure",
+          "Private Source Code Exposure",
+          "Source Code Information Disclosure",
+          "Source Code Information Leakage"
+        ]
+      },
+      "cwe": [
+        {
+          "id": "CWE-538",
+          "name": "Insertion of Sensitive Information into Externally-Accessible File or Directory"
+        }
+      ],
+      "cve": [],
+      "owasp": [
+        "A05:2021 Security Misconfiguration"
+      ],
+      "facilitates_findings": [
+        "WEB-001"
+      ]
+    },
+    {
+      "id": "WEB-001",
+      "category": "web",
+      "severity": "CRITICAL",
+      "status": "Confirmed",
+      "vulnerability": {
+        "name": "Unauthenticated OS Command Injection - Remote Code Execution",
+        "search_tags": [
+          "Remote Code Execution",
+          "Remote Command Execution",
+          "Arbitrary Code Execution",
+          "Arbitrary Command Execution",
+          "Remote Command Injection",
+          "Code Execution",
+          "Command Execution",
+          "Unauthenticated Remote Code Execution",
+          "OS Command Injection",
+          "OS Command Execution"
+        ]
+      },
+      "cwe": [
+        {
+          "id": "CWE-78",
+          "name": "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+        }
+      ],
+      "cve": [],
+      "owasp": [
+        "A03:2021 Injection"
+      ],
+      "facilitates_findings": [
+        "LPE-002"
+      ]
+    },
+    {
+      "id": "LPE-002",
+      "category": "privilege_escalation",
+      "severity": "HIGH",
+      "status": "Confirmed",
+      "vulnerability": {
+        "name": "Arbitrary File Write via PJL Path Traversal",
+        "search_tags": [
+          "Directory Path Traversal",
+          "Arbitrary File Write",
+          "Arbitrary File Overwrite",
+          "File Write",
+          "File Overwrite",
+          "Path Traversal",
+          "Directory Traversal",
+          "File Path Traversal",
+          "File System Traversal",
+          "Directory Escape",
+          "Path Escape",
+          "Relative Path Traversal",
+          "Path Manipulation"
+        ]
+      },
+      "cwe": [
+        {
+          "id": "CWE-22",
+          "name": "Path Traversal"
+        },
+        {
+          "id": "CWE-73",
+          "name": "External Control of File Name or Path"
+        }
+      ],
+      "cve": [],
+      "owasp": [
+        "A01:2021 – Broken Access Control"
+      ],
+      "facilitates_findings": [
+        "LPE-001"
+      ]
+    },
+    {
+      "id": "LPE-001",
+      "category": "privilege_escalation",
+      "severity": "HIGH",
+      "status": "Confirmed",
+      "vulnerability": {
+        "name": "Improper Trust Boundary / Privileged File Descriptor Disclosure",
+        "search_tags": [
+          "Privileged File Descriptor Disclosure",
+          "File Descriptor Disclosure",
+          "File Descriptor Exposure",
+          "File Descriptor Leak",
+          "File Descriptor Information Disclosure",
+          "Information Disclosure",
+          "Data Exposure"
+        ]
+      },
+      "cwe": [
+        {
+          "id": "CWE-668",
+          "name": "Exposure of Resource to Wrong Sphere"
+        }
+      ],
+      "cve": [],
+      "owasp": [
+        "A01:2021 – Broken Access Control"
+      ],
+      "facilitates_findings": []
+    }
+  ]
+}
