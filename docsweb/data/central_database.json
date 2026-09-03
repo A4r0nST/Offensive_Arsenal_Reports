@@ -9,8 +9,8 @@
         "difficulty": "Easy"
       },
       "description": "In this report, we analyze the compromise of Cohort, starting with the discovery of an SSRF vulnerability on the main web application that bypassed loopback validation to enumerate internal endpoints. This led to the identification of an internal Marimo notebook service running on a subdomain. Exploiting a pre-authentication terminal WebSocket RCE (CVE-2026-39987) in Marimo allowed us to gain initial access. Finally, local privilege escalation was achieved by exploiting a TOCTOU race condition in PackageKit (CVE-2026-41651) to obtain root access.",
-      "logomachine": "https://raw.githubusercontent.com/A4r0nST/Offensive_Arsenal_Reports/main/Web/Reports/Cohort/assets/Cohort.png",
-      "report_url": "https://github.com/A4r0nST/Offensive_Arsenal_Reports/blob/main/Web/Reports/Cohort/Cohort.md",
+      "logomachine": "https://raw.githubusercontent.com/A4r0nST/Offensive_Arsenal_Reports/main/Technical_Reports/Web/Cohort/assets/Cohort.png",
+      "report_url": "https://github.com/A4r0nST/Offensive_Arsenal_Reports/blob/main/Technical_Reports/Web/Cohort/Cohort.md",
       "network": {
         "ports": [
           {
@@ -257,8 +257,8 @@
         "difficulty": "Easy"
       },
       "description": "This report reveals how a simple oversight in a Gitea commit triggered a total environment compromise: exposed secrets unlocked remote code execution on Krayin CRM, internal discovery paved the way to an interactive SSH session, and manipulating malicious Git objects against an internal sync service ultimately granted full root control.",
-      "logomachine": "https://raw.githubusercontent.com/A4r0nST/Offensive_Arsenal_Reports/main/Web/Reports/Nexus/assets/Nexus.png",
-      "report_url": "https://github.com/A4r0nST/Offensive_Arsenal_Reports/blob/main/Web/Reports/Nexus/Nexus.md",
+      "logomachine": "https://raw.githubusercontent.com/A4r0nST/Offensive_Arsenal_Reports/main/Technical_Reports/Web/Nexus/assets/Nexus.png",
+      "report_url": "https://github.com/A4r0nST/Offensive_Arsenal_Reports/blob/main/Technical_Reports/Web/Nexus/Nexus.md",
       "network": {
         "ports": [
           {
@@ -601,8 +601,8 @@
         "difficulty": "Easy"
       },
       "description": "This report analyzes the compromise of Paperwork, showing how exposed source code led to unauthenticated command injection in a custom LPD service for initial access, internal discovery uncovered a JetDirect/PJL service to pivot deeper into the target, and subverting a privileged system daemon ultimately granted complete root control.",
-      "logomachine": "https://raw.githubusercontent.com/A4r0nST/Offensive_Arsenal_Reports/main/Web/Reports/Paperwork/assets/Paperwork.png",
-      "report_url": "https://github.com/A4r0nST/Offensive_Arsenal_Reports/blob/main/Web/Reports/Paperwork/Paperwork.md",
+      "logomachine": "https://raw.githubusercontent.com/A4r0nST/Offensive_Arsenal_Reports/main/Technical_Reports/Web/Paperwork/assets/Paperwork.png",
+      "report_url": "https://github.com/A4r0nST/Offensive_Arsenal_Reports/blob/main/Technical_Reports/Web/Paperwork/Paperwork.md",
       "network": {
         "ports": [
           {
@@ -894,8 +894,8 @@
         "difficulty": "Easy"
       },
       "description": "In this report, we analyze the compromise of Reactor, starting with the identification of Next.js 15.0.3 on port 3000. Exploitation of CVE-2025-55182 (React Server Components RCE) provided initial access as the node user. Local enumeration revealed an SQLite database containing password hashes, which were cracked offline to gain SSH access as the engineer user. Finally, privilege escalation was achieved by abusing an unauthenticated Node.js Inspector interface running as root on port 9229 to execute arbitrary commands.",
-      "logomachine": "https://raw.githubusercontent.com/A4r0nST/Offensive_Arsenal_Reports/main/Web/Reports/Reactor/assets/Reactor.png",
-      "report_url": "https://github.com/A4r0nST/Offensive_Arsenal_Reports/blob/main/Web/Reports/Reactor/Reactor.md",
+      "logomachine": "https://raw.githubusercontent.com/A4r0nST/Offensive_Arsenal_Reports/main/Technical_Reports/Web/Reactor/assets/Reactor.png",
+      "report_url": "https://github.com/A4r0nST/Offensive_Arsenal_Reports/blob/main/Technical_Reports/Web/Reactor/Reactor.md",
       "network": {
         "ports": [
           {
