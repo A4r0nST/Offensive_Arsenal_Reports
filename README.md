@@ -5,6 +5,7 @@
 
   <br />
   <br />
+  <br />
 
   <!-- Título y Subtítulo -->
   <p><b>Hacking & Tech Insights • Skill Discovery • Bug Reports</b></p>
@@ -43,7 +44,6 @@
   </p>
 
 </div>
----
 
 ## ✨ Highlights
 
