@@ -7,7 +7,6 @@
   <br />
 
   <!-- Título y Subtítulo -->
-  <h1>OFFENSIVE ARSENAL</h1>
   <p><b>Hacking & Tech Insights • Skill Discovery • Bug Reports</b></p>
   <p>A personal offensive security knowledge base focused on learning, documenting, and sharing practical security knowledge.</p>
 
